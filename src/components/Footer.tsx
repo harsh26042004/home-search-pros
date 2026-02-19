@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Youtube, Twitter } from "lucide-react";
 import logo from "@/assets/logo.jpg";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function Footer() {
   return (
