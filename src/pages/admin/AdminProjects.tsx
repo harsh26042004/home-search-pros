@@ -109,7 +109,44 @@ export default function AdminProjects() {
                 </select>
               </div>
               <textarea placeholder="Description" rows={3} value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-3 w-full border border-input rounded-md px-3 py-2 text-sm resize-none" />
+              <Input placeholder="Address" value={editing.address} onChange={(e) => setEditing({ ...editing, address: e.target.value })} className="mt-3" />
+              <Input placeholder="Carpet Area Range (e.g. 950–1450 sq.ft)" value={editing.carpetAreaRange} onChange={(e) => setEditing({ ...editing, carpetAreaRange: e.target.value })} className="mt-3" />
+              <Input placeholder="Property Type" value={editing.propertyType} onChange={(e) => setEditing({ ...editing, propertyType: e.target.value })} className="mt-3" />
+              <Input placeholder="Google Map Embed URL" value={editing.mapEmbedUrl || ""} onChange={(e) => setEditing({ ...editing, mapEmbedUrl: e.target.value })} className="mt-3" />
+              <div className="mt-3">
+                <label className="text-xs font-semibold text-navy block mb-1">Image URLs (one per line)</label>
+                <textarea placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg" rows={3} value={editing.images.join("\n")} onChange={(e) => setEditing({ ...editing, images: e.target.value.split("\n").filter(Boolean) })} className="w-full border border-input rounded-md px-3 py-2 text-sm resize-none" />
+                {editing.images.filter(Boolean).length > 0 && (
+                  <div className="flex gap-2 mt-2 flex-wrap">
+                    {editing.images.filter(Boolean).map((img, i) => (
+                      <div key={i} className="relative w-20 h-20 border border-border overflow-hidden">
+                        <img src={img} alt={`Preview ${i + 1}`} className="w-full h-full object-cover" />
+                        <button onClick={() => setEditing({ ...editing, images: editing.images.filter((_, idx) => idx !== i) })} className="absolute top-0 right-0 bg-crimson text-white text-xs w-4 h-4 flex items-center justify-center">×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <textarea placeholder="USPs (one per line)" rows={3} value={editing.usps.join("\n")} onChange={(e) => setEditing({ ...editing, usps: e.target.value.split("\n").filter(Boolean) })} className="mt-3 w-full border border-input rounded-md px-3 py-2 text-sm resize-none" />
               <textarea placeholder="Amenities (one per line)" rows={3} value={editing.amenities.join("\n")} onChange={(e) => setEditing({ ...editing, amenities: e.target.value.split("\n").filter(Boolean) })} className="mt-3 w-full border border-input rounded-md px-3 py-2 text-sm resize-none" />
+              <div className="mt-3">
+                <label className="text-xs font-semibold text-navy block mb-1">Configurations</label>
+                {editing.configurations.map((c, i) => (
+                  <div key={i} className="flex gap-2 mb-2 items-center">
+                    <Input placeholder="BHK (e.g. 2 BHK)" value={c.bhk} onChange={(e) => { const configs = [...editing.configurations]; configs[i] = { ...c, bhk: e.target.value }; setEditing({ ...editing, configurations: configs }); }} className="flex-1" />
+                    <Input placeholder="Area (e.g. 950 sq.ft)" value={c.carpetArea} onChange={(e) => { const configs = [...editing.configurations]; configs[i] = { ...c, carpetArea: e.target.value }; setEditing({ ...editing, configurations: configs }); }} className="flex-1" />
+                    <Input placeholder="Price ₹" type="number" value={c.price} onChange={(e) => { const configs = [...editing.configurations]; configs[i] = { ...c, price: Number(e.target.value) }; setEditing({ ...editing, configurations: configs }); }} className="flex-1" />
+                    <button onClick={() => setEditing({ ...editing, configurations: editing.configurations.filter((_, idx) => idx !== i) })} className="text-crimson text-sm font-bold">×</button>
+                  </div>
+                ))}
+                <Button variant="outline" size="sm" onClick={() => setEditing({ ...editing, configurations: [...editing.configurations, { bhk: "", carpetArea: "", price: 0 }] })}>
+                  <Plus className="h-3 w-3" /> Add Config
+                </Button>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <input type="checkbox" checked={editing.featured || false} onChange={(e) => setEditing({ ...editing, featured: e.target.checked })} id="featured" />
+                <label htmlFor="featured" className="text-sm text-navy font-medium">Featured on Home Page</label>
+              </div>
               <div className="mt-4 flex gap-3 justify-end">
                 <Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
                 <Button onClick={handleSave} className="bg-crimson hover:bg-crimson-dark text-white">Save Project</Button>
