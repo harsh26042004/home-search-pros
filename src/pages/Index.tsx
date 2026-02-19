@@ -328,7 +328,7 @@ export default function Home() {
               Enquire Now — It's Free
             </Button>
             <a
-              href="https://wa.me/919876543210"
+              href={getWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-white/10 font-semibold px-8 h-12 text-base rounded-lg transition-colors"

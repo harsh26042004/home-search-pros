@@ -310,7 +310,7 @@ export default function ProjectDetail() {
           Call Now
         </a>
         <a
-          href={`https://wa.me/919876543210`}
+          href={getWhatsAppUrl({ projectName: project.name })}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 bg-green-600 text-white text-sm font-semibold py-2.5 rounded-lg text-center"

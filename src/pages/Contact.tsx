@@ -87,7 +87,7 @@ export default function Contact() {
               <div>
                 <p className="font-semibold text-navy text-sm">WhatsApp</p>
                 <a
-                  href="https://wa.me/919876543210"
+                  href={getWhatsAppUrl({ page: "contact" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-green-700 hover:underline"
