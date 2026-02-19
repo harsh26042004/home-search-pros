@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { saveLead } from "@/lib/storage";
 import { toast } from "@/hooks/use-toast";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 interface ContactFormValues {
   name: string;
