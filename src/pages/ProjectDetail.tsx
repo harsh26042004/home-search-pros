@@ -12,6 +12,7 @@ import EMICalculator from "@/components/EMICalculator";
 import { getProjects } from "@/lib/storage";
 import { formatPriceRange, formatINR } from "@/lib/formatters";
 import type { Project } from "@/data/types";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
