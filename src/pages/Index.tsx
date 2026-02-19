@@ -11,6 +11,7 @@ import { getProjects } from "@/lib/storage";
 import { getBlogPosts } from "@/lib/storage";
 import { testimonials } from "@/data/testimonials";
 import gangotriImg from "@/assets/gangotri-ramtal.jpg";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 const locations = ["Mathura", "Noida", "Greater Noida", "Agra", "Vrindavan"];
 const budgets = ["Under ₹50L", "₹50L–₹1Cr", "₹1Cr–₹2Cr", "Above ₹2Cr"];
