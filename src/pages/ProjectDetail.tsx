@@ -12,6 +12,7 @@ import EMICalculator from "@/components/EMICalculator";
 import { getProjects } from "@/lib/storage";
 import { formatPriceRange, formatINR } from "@/lib/formatters";
 import type { Project } from "@/data/types";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -259,7 +260,7 @@ export default function ProjectDetail() {
                     Call Now
                   </a>
                   <a
-                    href={`https://wa.me/919876543210?text=Hi%2C%20I%20am%20interested%20in%20${encodeURIComponent(project.name)}`}
+                    href={getWhatsAppUrl({ projectName: project.name })}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white h-11 rounded-md text-sm font-medium transition-colors"
@@ -309,7 +310,7 @@ export default function ProjectDetail() {
           Call Now
         </a>
         <a
-          href={`https://wa.me/919876543210`}
+          href={getWhatsAppUrl({ projectName: project.name })}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 bg-green-600 text-white text-sm font-semibold py-2.5 rounded-lg text-center"
