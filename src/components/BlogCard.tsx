@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import { CalendarDays, Tag } from "lucide-react";
-import type { BlogPost } from "@/data/types";
+import type { Tables } from "@/integrations/supabase/types";
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: Tables<"blog_posts">;
 }
 
 export default function BlogCard({ post }: BlogCardProps) {
   return (
-    <Link to={`/blog/${post.slug}`} className="card-hover group block rounded-xl overflow-hidden border border-border bg-white shadow-sm">
+    <Link to={`/blog/${post.slug}`} className="card-hover group block overflow-hidden border border-border bg-white shadow-sm">
       <div className="overflow-hidden h-44">
         <img
-          src={post.coverImage}
+          src={post.cover_image || ""}
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -24,7 +24,7 @@ export default function BlogCard({ post }: BlogCardProps) {
           </span>
           <span className="flex items-center gap-1">
             <CalendarDays className="h-3 w-3" />
-            {new Date(post.publishedAt).toLocaleDateString("en-IN", {
+            {new Date(post.published_at).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "short",
               year: "numeric",
