@@ -56,7 +56,7 @@ export default function AdminProjects() {
   };
 
   const startEdit = (p: Tables<"projects">) => {
-    const configs = (p.configurations as Config[]) || [];
+    const configs = (p.configurations as unknown as Config[]) || [];
     setEditing({ ...p, _configs: configs });
   };
 
