@@ -14,16 +14,276 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blog_posts: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string | null
+          cover_image: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          published_at: string
+          slug: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published_at?: string
+          slug: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published_at?: string
+          slug?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          ai_intent_level: string | null
+          ai_notes: string | null
+          bhk: string | null
+          budget: string | null
+          created_at: string
+          email: string | null
+          id: string
+          interactions: Json | null
+          location_pref: string | null
+          message: string | null
+          name: string
+          phone: string
+          project_id: string | null
+          project_name: string | null
+          purpose: string | null
+          source: string | null
+          status: string
+        }
+        Insert: {
+          ai_intent_level?: string | null
+          ai_notes?: string | null
+          bhk?: string | null
+          budget?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          interactions?: Json | null
+          location_pref?: string | null
+          message?: string | null
+          name: string
+          phone: string
+          project_id?: string | null
+          project_name?: string | null
+          purpose?: string | null
+          source?: string | null
+          status?: string
+        }
+        Update: {
+          ai_intent_level?: string | null
+          ai_notes?: string | null
+          bhk?: string | null
+          budget?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          interactions?: Json | null
+          location_pref?: string | null
+          message?: string | null
+          name?: string
+          phone?: string
+          project_id?: string | null
+          project_name?: string | null
+          purpose?: string | null
+          source?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          address: string | null
+          amenities: string[] | null
+          builder: string | null
+          carpet_area_range: string | null
+          city: string
+          configurations: Json | null
+          created_at: string
+          description: string | null
+          featured: boolean | null
+          id: string
+          images: string[] | null
+          map_embed_url: string | null
+          micro_market: string | null
+          name: string
+          possession_date: string | null
+          price_max: number | null
+          price_min: number | null
+          property_type: string | null
+          rera_number: string | null
+          slug: string
+          status: string
+          updated_at: string
+          usps: string[] | null
+        }
+        Insert: {
+          address?: string | null
+          amenities?: string[] | null
+          builder?: string | null
+          carpet_area_range?: string | null
+          city?: string
+          configurations?: Json | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          images?: string[] | null
+          map_embed_url?: string | null
+          micro_market?: string | null
+          name: string
+          possession_date?: string | null
+          price_max?: number | null
+          price_min?: number | null
+          property_type?: string | null
+          rera_number?: string | null
+          slug: string
+          status?: string
+          updated_at?: string
+          usps?: string[] | null
+        }
+        Update: {
+          address?: string | null
+          amenities?: string[] | null
+          builder?: string | null
+          carpet_area_range?: string | null
+          city?: string
+          configurations?: Json | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          images?: string[] | null
+          map_embed_url?: string | null
+          micro_market?: string | null
+          name?: string
+          possession_date?: string | null
+          price_max?: number | null
+          price_min?: number | null
+          property_type?: string | null
+          rera_number?: string | null
+          slug?: string
+          status?: string
+          updated_at?: string
+          usps?: string[] | null
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          created_at: string
+          id: string
+          location: string | null
+          name: string
+          project: string | null
+          rating: number | null
+          review: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name: string
+          project?: string | null
+          rating?: number | null
+          review?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name?: string
+          project?: string | null
+          rating?: number | null
+          review?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +410,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
