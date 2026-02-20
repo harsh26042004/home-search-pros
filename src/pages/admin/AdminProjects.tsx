@@ -46,7 +46,7 @@ export default function AdminProjects() {
     if (!editing) return;
     const slug = editing.slug || editing.name?.toLowerCase().replace(/\s+/g, "-") || "";
     const { _configs, ...rest } = editing;
-    await saveProject({ ...rest, slug, configurations: _configs });
+    await saveProject({ ...rest, slug, configurations: _configs as unknown as any });
     refresh();
     setEditing(null);
   };
