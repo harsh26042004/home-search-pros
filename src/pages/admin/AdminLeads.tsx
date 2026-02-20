@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { getLeads, updateLeadStatus, deleteLead } from "@/lib/storage";
-import type { Lead } from "@/data/types";
+import type { Tables } from "@/integrations/supabase/types";
 import { Trash2 } from "lucide-react";
 
 export default function AdminLeads() {
-  const [leads, setLeads] = useState<Lead[]>(getLeads());
+  const [leads, setLeads] = useState<Tables<"leads">[]>([]);
   const [filter, setFilter] = useState("");
 
-  const refresh = () => setLeads(getLeads());
+  const refresh = () => getLeads().then(setLeads);
+  useEffect(() => { refresh(); }, []);
 
-  const handleStatus = (id: string, status: Lead["status"]) => {
-    updateLeadStatus(id, status);
+  const handleStatus = async (id: string, status: string) => {
+    await updateLeadStatus(id, status);
     refresh();
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Delete this lead?")) { deleteLead(id); refresh(); }
+  const handleDelete = async (id: string) => {
+    if (confirm("Delete this lead?")) { await deleteLead(id); refresh(); }
   };
 
   const filtered = leads.filter((l) =>
@@ -28,7 +29,7 @@ export default function AdminLeads() {
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-navy">Leads Inbox</h1>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="h-9 border border-input rounded-lg px-3 text-sm">
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="h-9 border border-input px-3 text-sm">
             <option value="">All Leads</option>
             <option value="new">New</option>
             <option value="contacted">Contacted</option>
@@ -36,15 +37,13 @@ export default function AdminLeads() {
             <option value="lost">Lost</option>
           </select>
         </div>
-        <div className="bg-white rounded-xl border border-border shadow-sm overflow-x-auto">
+        <div className="bg-white border border-border shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted">
-              <tr>
-                {["Name","Phone","Email","Project","Budget","BHK","Status","Date","Action"].map((h) => (
-                  <th key={h} className="text-left px-3 py-3 font-semibold text-navy text-xs">{h}</th>
-                ))}
-              </tr>
-            </thead>
+            <thead className="bg-muted"><tr>
+              {["Name","Phone","Email","Project","Budget","BHK","Status","Date","Action"].map((h) => (
+                <th key={h} className="text-left px-3 py-3 font-semibold text-navy text-xs">{h}</th>
+              ))}
+            </tr></thead>
             <tbody>
               {filtered.map((lead) => (
                 <tr key={lead.id} className="border-t border-border hover:bg-muted/50">
@@ -55,11 +54,7 @@ export default function AdminLeads() {
                   <td className="px-3 py-2.5 text-muted-foreground text-xs">{lead.budget || "—"}</td>
                   <td className="px-3 py-2.5 text-muted-foreground text-xs">{lead.bhk || "—"}</td>
                   <td className="px-3 py-2.5">
-                    <select
-                      value={lead.status}
-                      onChange={(e) => handleStatus(lead.id, e.target.value as Lead["status"])}
-                      className="text-xs border border-input rounded px-1.5 py-1"
-                    >
+                    <select value={lead.status} onChange={(e) => handleStatus(lead.id, e.target.value)} className="text-xs border border-input px-1.5 py-1">
                       <option value="new">New</option>
                       <option value="contacted">Contacted</option>
                       <option value="qualified">Qualified</option>
@@ -67,16 +62,10 @@ export default function AdminLeads() {
                     </select>
                   </td>
                   <td className="px-3 py-2.5 text-muted-foreground text-xs">{new Date(lead.created_at).toLocaleDateString("en-IN")}</td>
-                  <td className="px-3 py-2.5">
-                    <button onClick={() => handleDelete(lead.id)} className="text-crimson hover:text-crimson-dark">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </td>
+                  <td className="px-3 py-2.5"><button onClick={() => handleDelete(lead.id)} className="text-crimson hover:text-crimson-dark"><Trash2 className="h-4 w-4" /></button></td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
-                <tr><td colSpan={9} className="px-4 py-8 text-center text-muted-foreground">No leads found</td></tr>
-              )}
+              {filtered.length === 0 && <tr><td colSpan={9} className="px-4 py-8 text-center text-muted-foreground">No leads found</td></tr>}
             </tbody>
           </table>
         </div>

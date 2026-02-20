@@ -1,7 +1,17 @@
 import { Navigate } from "react-router-dom";
-import { isAdminLoggedIn } from "@/lib/storage";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  if (!isAdminLoggedIn()) return <Navigate to="/admin/login" replace />;
+  const { user, isAdmin, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-muted">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) return <Navigate to="/admin/login" replace />;
   return <>{children}</>;
 }

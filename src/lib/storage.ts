@@ -1,118 +1,78 @@
-import type { Lead, Project, BlogPost } from "@/data/types";
-
-// ---- Leads ----
-export function getLeads(): Lead[] {
-  try {
-    return JSON.parse(localStorage.getItem("ih_leads") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-export function saveLead(lead: Omit<Lead, "id" | "created_at" | "ai_intent_level" | "ai_notes" | "interactions">): Lead {
-  const leads = getLeads();
-  const newLead: Lead = {
-    ...lead,
-    id: crypto.randomUUID(),
-    created_at: new Date().toISOString(),
-    status: "new",
-    ai_intent_level: null,
-    ai_notes: null,
-    interactions: [],
-  };
-  leads.unshift(newLead);
-  localStorage.setItem("ih_leads", JSON.stringify(leads));
-  return newLead;
-}
-
-export function updateLeadStatus(id: string, status: Lead["status"]): void {
-  const leads = getLeads();
-  const idx = leads.findIndex((l) => l.id === id);
-  if (idx !== -1) {
-    leads[idx].status = status;
-    localStorage.setItem("ih_leads", JSON.stringify(leads));
-  }
-}
-
-export function deleteLead(id: string): void {
-  const leads = getLeads().filter((l) => l.id !== id);
-  localStorage.setItem("ih_leads", JSON.stringify(leads));
-}
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 
 // ---- Projects ----
-import { seedProjects } from "@/data/projects";
-
-export function getProjects(): Project[] {
-  try {
-    const stored = localStorage.getItem("ih_projects");
-    if (stored) return JSON.parse(stored);
-    // Seed on first load
-    localStorage.setItem("ih_projects", JSON.stringify(seedProjects));
-    return seedProjects;
-  } catch {
-    return seedProjects;
-  }
+export async function getProjects(): Promise<Tables<"projects">[]> {
+  const { data, error } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
+  if (error) { console.error("getProjects error:", error); return []; }
+  return data || [];
 }
 
-export function saveProject(project: Project): void {
-  const projects = getProjects();
-  const idx = projects.findIndex((p) => p.id === project.id);
-  if (idx !== -1) {
-    projects[idx] = project;
-  } else {
-    projects.unshift(project);
-  }
-  localStorage.setItem("ih_projects", JSON.stringify(projects));
+export async function getProjectBySlug(slug: string): Promise<Tables<"projects"> | null> {
+  const { data, error } = await supabase.from("projects").select("*").eq("slug", slug).maybeSingle();
+  if (error) { console.error("getProjectBySlug error:", error); return null; }
+  return data;
 }
 
-export function deleteProject(id: string): void {
-  const projects = getProjects().filter((p) => p.id !== id);
-  localStorage.setItem("ih_projects", JSON.stringify(projects));
+export async function saveProject(project: TablesInsert<"projects">): Promise<void> {
+  const { error } = await supabase.from("projects").upsert(project, { onConflict: "id" });
+  if (error) console.error("saveProject error:", error);
+}
+
+export async function deleteProject(id: string): Promise<void> {
+  const { error } = await supabase.from("projects").delete().eq("id", id);
+  if (error) console.error("deleteProject error:", error);
 }
 
 // ---- Blog Posts ----
-import { seedBlogs } from "@/data/blogs";
-
-export function getBlogPosts(): BlogPost[] {
-  try {
-    const stored = localStorage.getItem("ih_blogs");
-    if (stored) return JSON.parse(stored);
-    localStorage.setItem("ih_blogs", JSON.stringify(seedBlogs));
-    return seedBlogs;
-  } catch {
-    return seedBlogs;
-  }
+export async function getBlogPosts(): Promise<Tables<"blog_posts">[]> {
+  const { data, error } = await supabase.from("blog_posts").select("*").order("published_at", { ascending: false });
+  if (error) { console.error("getBlogPosts error:", error); return []; }
+  return data || [];
 }
 
-export function saveBlogPost(post: BlogPost): void {
-  const posts = getBlogPosts();
-  const idx = posts.findIndex((p) => p.id === post.id);
-  if (idx !== -1) {
-    posts[idx] = post;
-  } else {
-    posts.unshift(post);
-  }
-  localStorage.setItem("ih_blogs", JSON.stringify(posts));
+export async function getBlogPostBySlug(slug: string): Promise<Tables<"blog_posts"> | null> {
+  const { data, error } = await supabase.from("blog_posts").select("*").eq("slug", slug).maybeSingle();
+  if (error) { console.error("getBlogPostBySlug error:", error); return null; }
+  return data;
 }
 
-export function deleteBlogPost(id: string): void {
-  const posts = getBlogPosts().filter((p) => p.id !== id);
-  localStorage.setItem("ih_blogs", JSON.stringify(posts));
+export async function saveBlogPost(post: TablesInsert<"blog_posts">): Promise<void> {
+  const { error } = await supabase.from("blog_posts").upsert(post, { onConflict: "id" });
+  if (error) console.error("saveBlogPost error:", error);
 }
 
-// ---- Admin Auth ----
-export function adminLogin(email: string, password: string): boolean {
-  return email === "admin@impyrealhomes.com" && password === "Impyreal@2025";
+export async function deleteBlogPost(id: string): Promise<void> {
+  const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+  if (error) console.error("deleteBlogPost error:", error);
 }
 
-export function isAdminLoggedIn(): boolean {
-  return localStorage.getItem("ih_admin_auth") === "true";
+// ---- Leads ----
+export async function getLeads(): Promise<Tables<"leads">[]> {
+  const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false });
+  if (error) { console.error("getLeads error:", error); return []; }
+  return data || [];
 }
 
-export function adminLogout(): void {
-  localStorage.removeItem("ih_admin_auth");
+export async function saveLead(lead: TablesInsert<"leads">): Promise<Tables<"leads"> | null> {
+  const { data, error } = await supabase.from("leads").insert(lead).select().single();
+  if (error) { console.error("saveLead error:", error); return null; }
+  return data;
 }
 
-export function setAdminLoggedIn(): void {
-  localStorage.setItem("ih_admin_auth", "true");
+export async function updateLeadStatus(id: string, status: string): Promise<void> {
+  const { error } = await supabase.from("leads").update({ status }).eq("id", id);
+  if (error) console.error("updateLeadStatus error:", error);
+}
+
+export async function deleteLead(id: string): Promise<void> {
+  const { error } = await supabase.from("leads").delete().eq("id", id);
+  if (error) console.error("deleteLead error:", error);
+}
+
+// ---- Testimonials ----
+export async function getTestimonials(): Promise<Tables<"testimonials">[]> {
+  const { data, error } = await supabase.from("testimonials").select("*").order("created_at", { ascending: false });
+  if (error) { console.error("getTestimonials error:", error); return []; }
+  return data || [];
 }
