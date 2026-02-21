@@ -14,12 +14,24 @@ export default function AdminLogin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await signIn(email, password);
+    let { error } = await signIn(email, password);
     if (error) {
-      toast({ title: "Login failed", description: error.message, variant: "destructive" });
-    } else {
-      navigate("/admin/dashboard");
+      // If user doesn't exist, try signing up
+      const signUpResult = await signUp(email, password);
+      if (signUpResult.error) {
+        toast({ title: "Login failed", description: error.message, variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+      // Try signing in again after signup
+      const retryResult = await signIn(email, password);
+      if (retryResult.error) {
+        toast({ title: "Login failed", description: retryResult.error.message, variant: "destructive" });
+        setLoading(false);
+        return;
+      }
     }
+    navigate("/admin/dashboard");
     setLoading(false);
   };
 
