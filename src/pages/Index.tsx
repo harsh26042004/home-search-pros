@@ -9,7 +9,7 @@ import ProjectCard from "@/components/ProjectCard";
 import BlogCard from "@/components/BlogCard";
 import { getProjects, getBlogPosts, getTestimonials } from "@/lib/storage";
 import type { Tables } from "@/integrations/supabase/types";
-import gangotriImg from "@/assets/gangotri-ramtal.jpg";
+import heroBg from "@/assets/hero-bg.jpg";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 const locations = ["Mathura", "Noida", "Greater Noida", "Agra", "Vrindavan"];
