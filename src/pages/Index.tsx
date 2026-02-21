@@ -61,7 +61,7 @@ export default function Home() {
 
       {/* ─── Hero ─── */}
       <section className="relative min-h-screen flex items-center">
-        <img src={gangotriImg} alt="Impyreal Homes Hero" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={heroBg} alt="Impyreal Homes Hero" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative container mx-auto px-4 pt-20 pb-16">
           <div className="max-w-3xl">
